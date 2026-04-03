@@ -1,0 +1,753 @@
+{
+  "name": "🛡️Cyber-Watch⚠️ (english)",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "sources",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        512
+      ],
+      "id": "5c32f89a-6df2-4ee0-a43a-13650bf50e1c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        512
+      ],
+      "id": "19d95d60-4779-42ed-b04a-1ac8341aa4a1",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f5c3bb7b-be58-43d2-9a02-ff621ad996c9",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        592
+      ],
+      "id": "2c9e858b-5080-4e58-9605-0d319e63a279",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vZvHxx1eqm2V9Y5E",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "link",
+              "field2": "Url"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1120,
+        512
+      ],
+      "id": "9355ec98-25f0-43b3-959a-059a531a4b03",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Url": "={{ $('Merge1').item.json.final_url }}",
+            "Titel": "={{ $('Merge1').item.json.final_title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Url",
+              "displayName": "Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Titel",
+              "displayName": "Titel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        512
+      ],
+      "id": "8461e856-6ea8-4c39-8888-3d45ba05ac56",
+      "name": "Append-Node",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vZvHxx1eqm2V9Y5E",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=## 🛡️ Cyber-Watch Alert ⚠️\n### [{{ $json.final_title }}]({{ $json.final_url }})\n**✍️ Author:** {{ $json.creator.trim().replace(/\\n/g, ' ').replace(/\\s+/g, ' ') }}\n**📅 Published:** {{ $json.pubDate ? $json.pubDate.toDate().format('dd.MM.yyyy, HH:mm') : 'No date available' }} (<t:{{ Math.floor(new Date($json.pubDate).getTime() / 1000) }}:R>) ⏱️\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        512
+      ],
+      "id": "8e8cfc1d-7eef-49c6-9cb3-abda323c3fe1",
+      "name": "Discord",
+      "webhookId": "17239351-ac50-461f-87d2-c7a2c5b163c9",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "afJNs3wfla53N5YK",
+          "name": "Discord Webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "bleepingcomputer.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "6809e0c3-0f93-413f-a3f7-86a2028d7b93"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "87760c19-2260-4e9d-a38c-54a03a0c170c",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "darkreading.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ee6e826d-797b-4612-9d27-c2064389abe3",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "krebsonsecurity.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e02cfc0c-7511-4e37-bf47-cf08f38a5204",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "schneier.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        480
+      ],
+      "id": "59d810b9-7ee6-42e4-a1dc-ca87f31f3bf1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "058f3a0a-9f9c-418a-bc00-08e775aee8f1",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Bleeping Computer*",
+              "type": "string"
+            },
+            {
+              "id": "41cc2e53-d7f5-4a8b-b6e4-95300d2cffa6",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "28d5e4a1-7e6c-44d1-a46f-5e54b23c4793",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "e593a7bf-c185-4bdc-9dae-700268c18ce8",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        224
+      ],
+      "id": "bd66ff35-3b34-43f5-a9e1-aa62f8f97a32",
+      "name": "Bleeping Computer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "919d035c-7041-4ab4-9910-6dbba56e24f1",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Dark Reading*",
+              "type": "string"
+            },
+            {
+              "id": "a8e72b1c-67dc-4ac3-b9ce-c25aa9688d2c",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "9bf803a1-5ed6-4b7b-8039-344065299d7b",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "de0716ad-7435-4f8b-aaf5-71ea38a9ebd0",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        416
+      ],
+      "id": "9e02f24d-d6ad-4dbe-92a7-3e3078da040e",
+      "name": "Dark Reading"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ef98a7d3-b6fc-46f0-ade5-cf636b55eca2",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Krebs on Security*",
+              "type": "string"
+            },
+            {
+              "id": "6f07daba-ca38-4701-b846-4c1cc3e3962c",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "79b396a1-4dc2-45a9-aa8d-8838f971479e",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "455542b4-cdaa-470f-bddb-9007a2af1596",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        608
+      ],
+      "id": "f1c805e9-cadc-49ce-8645-85d06a3565f0",
+      "name": "Krebs on Security"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "495ed261-2257-4332-a51a-d555a54f4a23",
+              "name": "creator",
+              "value": "={{ $json.author }} | *Schneier on Security*",
+              "type": "string"
+            },
+            {
+              "id": "222e6c83-11e9-4a62-b075-abdbcca99cff",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "196696ec-612c-44d7-b740-b411225812c7",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "361924c5-9a58-4cf2-b6ab-603db57f9914",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        800
+      ],
+      "id": "726a6164-6801-45da-9d1d-a0778188a554",
+      "name": "Schneier on Security"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        480
+      ],
+      "id": "46013f36-8345-4f43-aa7c-601f4f3ba327",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        512
+      ],
+      "id": "36332bfc-e85c-41a8-a814-80bf2762abd8",
+      "name": "⏱️ Every 3 Hours"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"sources\": [\n    {\"name\": \"Bleeping Computer\", \"url\": \"https://www.bleepingcomputer.com/feed/\"},\n    {\"name\": \"Dark Reading\", \"url\": \"https://www.darkreading.com/rss.xml\"},\n    {\"name\": \"Krebs on Security\", \"url\": \"https://krebsonsecurity.com/feed/\"},\n    {\"name\": \"Schneier on Security\", \"url\": \"https://www.schneier.com/feed/atom/\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        512
+      ],
+      "id": "b2e37949-084c-4fcc-b820-e99fc9c3804d",
+      "name": "Sources"
+    },
+    {
+      "parameters": {
+        "content": "## Please select your own Google Sheet here",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        832,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "86614b09-e5f8-472b-ad00-2765edeb740d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Please select your own Google Sheet here",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "82dc60ec-35b7-495b-97ff-c973d14e59da",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=### ⚠️ Workflow Error: 🛡️Cyber-Watch⚠️\n**Timestamp:** {{ $now.toFormat('dd.MM.yyyy, HH:mm:ss') }}\n_Please check the logs!_ 🪲\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ab0dcd0c-0bee-4e11-9308-53aa4c0dbb4a",
+      "name": "🪲 Discord: Report a bug",
+      "webhookId": "eadae32f-272b-42f4-a854-3ebf48bfb3d8",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "VRv8YVwAIpwsbtQx",
+          "name": "Discord Error Webhook"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "🪲 Discord: Report a bug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Append-Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Bleeping Computer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dark Reading",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Krebs on Security",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Schneier on Security",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schneier on Security": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Bleeping Computer": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dark Reading": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Krebs on Security": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append-Node": {
+      "main": [
+        []
+      ]
+    },
+    "⏱️ Every 3 Hours": {
+      "main": [
+        [
+          {
+            "node": "Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sources": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/Berlin",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "37d4c111-a1ad-448f-910d-68abf4d51245",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "18da6dd9697b1fb7fa9684e5578840545014998b708b2c7ada1ec4873bb2dda8"
+  },
+  "id": "R55bQaUMKGfZI79e",
+  "tags": []
+}

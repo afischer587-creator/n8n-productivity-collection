@@ -1,0 +1,917 @@
+{
+  "name": "🛡️Cyber-Watch⚠️ (german)",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "quellen",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        704
+      ],
+      "id": "bc036987-3307-4d48-976b-c799aefe8c98",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        704
+      ],
+      "id": "feff73e9-a267-42d6-a172-34ba113b5cb8",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3d39bc39-6f0b-484b-81f6-0fd0f859327a",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        776
+      ],
+      "id": "0f9a36fb-9611-4158-a530-1c89686ea67a",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vZvHxx1eqm2V9Y5E",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "link",
+              "field2": "Url"
+            }
+          ]
+        },
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1120,
+        704
+      ],
+      "id": "e089928c-ab49-4c44-b9f8-b3cc99830a14",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Url": "={{ $('Merge1').item.json.final_url }}",
+            "Titel": "={{ $('Merge1').item.json.final_title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Url",
+              "displayName": "Url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Titel",
+              "displayName": "Titel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        704
+      ],
+      "id": "84f6880f-31fe-44a8-bec9-85dfe8817b94",
+      "name": "Append-Node",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vZvHxx1eqm2V9Y5E",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=## 🛡️ Cyber-Watch Alert ⚠️\n### [{{ $json.final_title }}]({{ $json.final_url }})\n**✍️ Autor:** {{ $json.creator.trim().replace(/\\n/g, ' ').replace(/\\s+/g, ' ') }}\n**📅 Veröffentlicht:** {{ $json.pubDate ? $json.pubDate.toDate().format('dd.MM.yyyy, HH:mm') : 'Kein Datum verfügbar' }} (<t:{{ Math.floor(new Date($json.pubDate).getTime() / 1000) }}:R>) ⏱️\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        704
+      ],
+      "id": "79be7144-8ff3-4674-9981-9571114b89b3",
+      "name": "Discord",
+      "webhookId": "4dd1a8d4-75c4-4925-bc71-67ca3f704bb4",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "afJNs3wfla53N5YK",
+          "name": "Discord Webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"quellen\": [\n    {\"name\": \"Bleeping Computer\", \"url\": \"https://www.bleepingcomputer.com/feed/\"},\n    {\"name\": \"Dark Reading\", \"url\": \"https://www.darkreading.com/rss.xml\"},\n    {\"name\": \"Krebs on Security\", \"url\": \"https://krebsonsecurity.com/feed/\"},\n    {\"name\": \"Schneier on Security\", \"url\": \"https://www.schneier.com/feed/atom/\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        704
+      ],
+      "id": "5872dd04-f0b1-4fb2-b4d3-3a07203cec4d",
+      "name": "Sources"
+    },
+    {
+      "parameters": {
+        "content": "## Bitte wählen Sie hier Ihr eigenes Google Sheet aus",
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        816,
+        928
+      ],
+      "typeVersion": 1,
+      "id": "7a1beb78-5b27-42e9-8bea-d3581a050865",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        704
+      ],
+      "id": "775531da-b194-476e-be6d-01093fa629b3",
+      "name": "⏱️ Alle 3 Stunden"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d12f738e-2af3-4886-a3c6-2c115123a5d5",
+              "name": "creator",
+              "value": "Günter Born",
+              "type": "string"
+            },
+            {
+              "id": "8eba0f06-a3bc-4d0c-a4c4-225cd90e0b0e",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "4c40813f-3173-4128-8677-d635fe93718d",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "707ed00f-3350-489c-ab39-b05f721b0c2f",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        416
+      ],
+      "id": "220a587f-064e-40ee-b7e3-6e30b607beb1",
+      "name": "Set Borns IT-Blog"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "620684b1-81cc-475c-b22b-3a6b1520d25f",
+              "name": "creator",
+              "value": "Heise Security",
+              "type": "string"
+            },
+            {
+              "id": "3ffc1886-7fb9-4fbd-8ee2-91de7cd5ac7f",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "3914438b-a696-43c8-8287-a67c23104d27",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "9114ac70-5e25-49be-94d9-30b7306563ce",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        800
+      ],
+      "id": "5e7c4f29-3b2e-4bcd-944a-428f5926560b",
+      "name": "Set Heise Security"
+    },
+    {
+      "parameters": {
+        "content": "## Bitte wählen Sie hier Ihr eigenes Google Sheet aus",
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        864
+      ],
+      "typeVersion": 1,
+      "id": "a5c5f755-f3fd-4acc-a67c-fbaf323d455b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        640
+      ],
+      "id": "5169fdb7-3c11-45b1-92ae-a5f16292841a",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "bleepingcomputer.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "6809e0c3-0f93-413f-a3f7-86a2028d7b93"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b31039d2-72c4-4be1-b3b6-b265094c2c8e",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "borncity.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "87760c19-2260-4e9d-a38c-54a03a0c170c",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "darkreading.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6c208a74-b19a-4c35-aa69-dbf5887e3285",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "heise.de",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ee6e826d-797b-4612-9d27-c2064389abe3",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "krebsonsecurity.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e02cfc0c-7511-4e37-bf47-cf08f38a5204",
+                    "leftValue": "={{ $json.link }}",
+                    "rightValue": "schneier.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        640
+      ],
+      "id": "6a03ee1a-fa23-4f07-943c-03cf9c23d328",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "058f3a0a-9f9c-418a-bc00-08e775aee8f1",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Bleeping Computer*",
+              "type": "string"
+            },
+            {
+              "id": "41cc2e53-d7f5-4a8b-b6e4-95300d2cffa6",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "28d5e4a1-7e6c-44d1-a46f-5e54b23c4793",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "e593a7bf-c185-4bdc-9dae-700268c18ce8",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        224
+      ],
+      "id": "3ac27eb8-4833-4b02-81ce-c6b40ee66791",
+      "name": "Bleeping Computer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "919d035c-7041-4ab4-9910-6dbba56e24f1",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Dark Reading*",
+              "type": "string"
+            },
+            {
+              "id": "a8e72b1c-67dc-4ac3-b9ce-c25aa9688d2c",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "9bf803a1-5ed6-4b7b-8039-344065299d7b",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "de0716ad-7435-4f8b-aaf5-71ea38a9ebd0",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        608
+      ],
+      "id": "28023ea4-224a-4e68-8519-3340681e4752",
+      "name": "Dark Reading"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ef98a7d3-b6fc-46f0-ade5-cf636b55eca2",
+              "name": "creator",
+              "value": "={{ $json.creator }} | *Krebs on Security*",
+              "type": "string"
+            },
+            {
+              "id": "6f07daba-ca38-4701-b846-4c1cc3e3962c",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "79b396a1-4dc2-45a9-aa8d-8838f971479e",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "455542b4-cdaa-470f-bddb-9007a2af1596",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        992
+      ],
+      "id": "7e2bbb5e-684d-47c8-81ae-cb9a6b57e64c",
+      "name": "Krebs on Security"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "495ed261-2257-4332-a51a-d555a54f4a23",
+              "name": "creator",
+              "value": "={{ $json.author }} | *Schneier on Security*",
+              "type": "string"
+            },
+            {
+              "id": "222e6c83-11e9-4a62-b075-abdbcca99cff",
+              "name": "final_title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "196696ec-612c-44d7-b740-b411225812c7",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "361924c5-9a58-4cf2-b6ab-603db57f9914",
+              "name": "final_url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        1184
+      ],
+      "id": "94aa5c4b-69ad-408a-98c5-34347bac0b6f",
+      "name": "Schneier on Security"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=### ⚠️ Workflow Error: 🛡️Cyber-Watch⚠️\n**Zeitpunkt:** {{ $now.toFormat('dd.MM.yyyy, HH:mm:ss') }}\n_Bitte die Logs prüfen!_ 🪲\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "fd722b9f-2a56-4306-b030-520f5d1e89f7",
+      "name": "🪲 Discord: Fehler melden",
+      "webhookId": "68b5e14c-4e14-4a6b-9ecb-eef197f466d6",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "VRv8YVwAIpwsbtQx",
+          "name": "Discord Error Webhook"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "🪲 Discord: Fehler melden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Append-Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append-Node": {
+      "main": [
+        []
+      ]
+    },
+    "Sources": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⏱️ Alle 3 Stunden": {
+      "main": [
+        [
+          {
+            "node": "Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Borns IT-Blog": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set Heise Security": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Bleeping Computer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Borns IT-Blog",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dark Reading",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Heise Security",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Krebs on Security",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Schneier on Security",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bleeping Computer": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dark Reading": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Krebs on Security": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Schneier on Security": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/Berlin",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "c9d9b4a8-6245-45b0-a9d4-bf91fffc6622",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "18da6dd9697b1fb7fa9684e5578840545014998b708b2c7ada1ec4873bb2dda8"
+  },
+  "id": "m3wLjvxeOD1G6Fik",
+  "tags": []
+}
