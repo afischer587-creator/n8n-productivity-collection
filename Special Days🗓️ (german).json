@@ -1,0 +1,1464 @@
+{
+  "name": "Special Days🗓️ (german)",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "053cacb1-fed4-480c-b3cc-122cf9eeea8f",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "65a6a562-1655-4120-9625-0df15b779d9c",
+              "leftValue": "={{ $json.datum.substring(0,5) }}",
+              "rightValue": "={{ $now.plus({days: 1}).toFormat('dd.MM') }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        1600
+      ],
+      "id": "3d812df7-9cb1-4420-9f79-6249e40308a1",
+      "name": "Filter für Morgen"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.nachricht }}\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        704
+      ],
+      "id": "638fd3f2-d2a2-4c0c-b839-e24d3ff618f5",
+      "name": "Discord",
+      "webhookId": "f0a7e2f6-2bdd-415e-8ba7-096cf963bdd6",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "a075b61a-4b5c-4578-820a-fae1797fc633",
+                    "leftValue": "={{ $json.altersberechnungnotwendig }}",
+                    "rightValue": "false",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.altersberechnungnotwendig }}",
+                    "rightValue": "true",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "71635074-3a29-4553-9402-891aaa803c69"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        608
+      ],
+      "id": "c38e3cc9-7a1f-4095-9c6c-9ec9ef4b7d4c",
+      "name": "AltersberechnungNotwendig-Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "95c517ca-40e7-4f0f-9189-09461e519942",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "5d18965c-1c5e-416c-aa0f-b7fdfd812d3d",
+              "name": "datum",
+              "value": "={{ $json.datum }}",
+              "type": "string"
+            },
+            {
+              "id": "13eb27ec-4869-4120-b26b-331b499aed6c",
+              "name": "alter",
+              "value": "={{ $now.year - parseInt($json.datum.substring(6)) }}",
+              "type": "number"
+            },
+            {
+              "id": "002775cb-b1ed-46d0-99c0-3ceb674b5713",
+              "name": "nachricht",
+              "value": "={{ $json.nachricht }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        704
+      ],
+      "id": "724987e9-c154-42d1-b4e8-319de22f0745",
+      "name": "Altersberechnung für Heute"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c8cf8e24-ef8f-4645-8787-96c82ad49341",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Jahrestag der Befreiung vom Nationalsozialismus",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "32c9f749-38c0-4a5a-acd4-4c3843a12d6c",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Pawniversary",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "860bd6ee-98e7-495b-ab27-7763f6175627",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Pokémon Day",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6e1cb035-b2f1-46a1-9fe8-5f23844e7ae0",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Tag der Deutschen Einheit",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6210bb92-e32b-47c9-915c-b1be192daa27",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Tag des Grundgesetzes",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cb8667da-c4db-4a61-937b-f8d289b03950",
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "Weltschachtag",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1088,
+        640
+      ],
+      "id": "6cf6db47-4402-4c39-a4c0-bafee7065faa",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=🕊️ Heute jährt sich der **Tag der Befreiung vom Nationalsozialismus** – 8. Mai 1945 (vor {{ $json.alter }} Jahren). Nie vergessen.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        224
+      ],
+      "id": "89c5d3d6-b207-4533-8b23-4f73472eccdd",
+      "name": "Jahrestag der Befreiung vom Nationalsozialismus"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=Alles Gute zum Tag der Deutschen Einheit! Ein Feiertag für das Zusammenwachsen. Seit {{ $json.alter }} Jahren vereint 🕊️",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        800
+      ],
+      "id": "50f87bfa-25ff-40e8-b3aa-0213e42887bb",
+      "name": "Tag der Deutschen Einheit"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=📜 Heute ist der **Tag des Grundgesetzes**! Seit {{ $json.alter }} Jahren die Basis unserer Demokratie. Artikel 1: Die Würde des Menschen ist unantastbar ⚖️",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        992
+      ],
+      "id": "522c2eb3-66d5-4f6c-95ec-3d909b737c2c",
+      "name": "Tag des Grundgesetzes"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=♟️ Heute ist der {{ $json.alter }}. **Weltschachtag**! Denkst du heute in Zügen? Der König grüßt. 👑",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        1184
+      ],
+      "id": "ec7e8468-2003-4993-9eeb-a53c1bc9cde3",
+      "name": "Weltschachtag"
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1536,
+        640
+      ],
+      "id": "eca38a00-a42b-49ff-b357-fc6a19acdd26",
+      "name": "Merge: All"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=### ⚠️ Fehler im Workflow: Special Days🗓️\n**Zeitpunkt:** {{ $now.toFormat('dd.MM.yyyy, HH:mm:ss') }}\n_Bitte die Logs prüfen!_ 🪲\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "0c0e1893-d4db-4530-ba08-d9b79a514667",
+      "name": "🪲 Discord: Fehler melden",
+      "webhookId": "7f31017e-cac4-4f34-8cf9-822b1010c42e",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "VRv8YVwAIpwsbtQx",
+          "name": "Discord: Errors🪲"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=🔴⚪ Heute ist **Pokémon Day**! Am 27. Februar 1996 erschienen Rot & Grün in Japan. Seit {{ $json.alter }} Jahren heißt es nun schon: Schnapp sie dir alle! 👾⚡",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        608
+      ],
+      "id": "be86bc4a-8f92-40fa-8ced-4d26fa9a248c",
+      "name": "Pokémon Day"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=⏰ Morgen ist **{{ $json.name }}**\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        640,
+        1888
+      ],
+      "id": "60fc0257-8401-42ed-9ff5-5586e99a4cab",
+      "name": "Discord1",
+      "webhookId": "8e8f21e6-3fd8-4a1c-a053-b9ac145fd55c",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"specialdays\": [\n    {\"name\": \"Earth Hour\", \"datum\": \"Letzter Samstag im März\", \"nachricht\": \"🌍 Heute ist **Earth Hour**! 🔌 Um 20:30 Uhr ziehen wir den Stecker, Zeit für 60 Minuten Licht 💡 aus! (oder einfach mal im Dunkeln gegen den Türrahmen laufen). Ein kleines Zeichen für unseren Planeten. ✨\"},\n    {\"name\": \"Programmers' Day\", \"datum\": 256, \"nachricht\": \"💻 Heute ist **Programmers' Day** – der 256. Tag des Jahres! Möge dein Code heute ohne Bugs kompilieren! 🎉\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        896
+      ],
+      "id": "b073f599-22fb-4360-87a1-f99bbc5b47d5",
+      "name": "Special Days (variabel)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4fd550b1-34e0-4339-94b3-6f3b68513d6e",
+              "name": "nachricht",
+              "value": "=[♟️](https://www.chess.com) Happy **Pawniversary**! Another year playing chess, another year hanging queens left and right and another year trying to climb the rating ladder to finally not be garbage anymore. Since {{ $json.alter }} years you are on the grind! 👑",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        416
+      ],
+      "id": "858b75f6-c7e3-4eaf-8075-1424f5c9d807",
+      "name": "Pawniversary"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        608
+      ],
+      "id": "41347ce3-fd74-4e83-bf53-e8836007d71a",
+      "name": "⏱️ Um 6:00 Uhr"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        1600
+      ],
+      "id": "9f85d2fb-5bb7-4136-b706-be0f6058e059",
+      "name": "⏱️ Um 18:00 Uhr"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "specialdays",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        192,
+        1600
+      ],
+      "id": "10e4110e-6aef-4526-a0b8-ec3da356e036",
+      "name": "Split Out3"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "specialdays",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        192,
+        1888
+      ],
+      "id": "9ffd4744-ba39-47fb-8cfa-e12d8bd105d4",
+      "name": "Split Out4"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"specialdays\": [\n    {\"name\": \"Earth Hour\", \"datum\": \"Letzter Samstag im März\", \"nachricht\": \"🌍 Heute ist **Earth Hour**! 🔌 Um 20:30 Uhr ziehen wir den Stecker, Zeit für 60 Minuten Licht 💡 aus! (oder einfach mal im Dunkeln gegen den Türrahmen laufen). Ein kleines Zeichen für unseren Planeten. ✨\"},\n    {\"name\": \"Programmers' Day\", \"datum\": 256, \"nachricht\": \"💻 Heute ist **Programmers' Day** – der 256. Tag des Jahres! Möge dein Code heute ohne Bugs kompilieren! 🎉\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        1888
+      ],
+      "id": "3e2d585c-23a9-49fb-b2cb-da4fc271561d",
+      "name": "Special Days (variabel)1"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=🏳️‍🌈 Happy Pride Month! 🏳️‍🌈\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        192,
+        416
+      ],
+      "id": "2667551a-b8f2-4bc3-a31f-b13d91a9fee8",
+      "name": "Discord: 🏳️‍🌈 Happy Pride Month! 🏳️‍🌈",
+      "webhookId": "9424de8e-58fb-4eef-bdca-1689c1aa0c1f",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "specialdays",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        192,
+        608
+      ],
+      "id": "a30653d3-9873-4d35-8bb8-93dc2978fc27",
+      "name": "Array: Special Days (statisch)1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "specialdays",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        192,
+        896
+      ],
+      "id": "c6971b68-7430-4367-b366-dfa60d1f9fe9",
+      "name": "Array: Special Days (variabel)"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.nachricht }}\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        640,
+        896
+      ],
+      "id": "fe86e638-0090-4ad5-9071-6b06eac5ec85",
+      "name": "Discord: Special Days (variabel)",
+      "webhookId": "42b667d8-207b-435e-8e62-418209a6d552",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4098634b-b190-4532-bee6-9956c52db119",
+              "leftValue": "={{ $json.datum.substring(0,5) }}",
+              "rightValue": "={{ $now.toFormat('dd.MM') }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        608
+      ],
+      "id": "73601ad2-e508-4e90-b82f-1d094806dadf",
+      "name": "Filter für Heute1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "73ceb896-dcf4-4f9b-b0a9-d661f2769dc1",
+              "leftValue": "={{ $now.ordinal }}",
+              "rightValue": "=256",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        800
+      ],
+      "id": "6c9c3fa3-c48b-453a-9dde-4ea2b69a06a4",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "73ceb896-dcf4-4f9b-b0a9-d661f2769dc1",
+              "leftValue": "={{ $now.plus({days: 1}).ordinal }}",
+              "rightValue": "={{ $json.datum }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        1792
+      ],
+      "id": "bf296549-adb1-4903-895f-6f6bfaf7d35a",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "73ceb896-dcf4-4f9b-b0a9-d661f2769dc1",
+              "leftValue": "={{ $now.month}}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        416
+      ],
+      "id": "5836ae8b-e6f6-4f62-ab32-971921fabb25",
+      "name": "Filter2"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=🏳️‍🌈 Morgen ist Pride Month! 🏳️‍🌈\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        192,
+        1408
+      ],
+      "id": "c85b3e57-7f7a-4fc1-a2ba-77357d0e8c4d",
+      "name": "Discord: 🏳️‍🌈 Happy Pride Month! 🏳️‍🌈1",
+      "webhookId": "ba938165-451f-420d-b972-c6de4a545ecb",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "73ceb896-dcf4-4f9b-b0a9-d661f2769dc1",
+              "leftValue": "={{ $now.plus({days: 1}).month}}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        1408
+      ],
+      "id": "590d10b7-1daa-4ab2-af07-5b57fa233301",
+      "name": "Filter3"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "=⏰ Morgen ist **{{ $json.name }}**\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        640,
+        1600
+      ],
+      "id": "83e8f9f6-e8e7-412b-9fc2-ac80da02cc5b",
+      "name": "Discord2",
+      "webhookId": "21583e4d-e389-4f73-9d3d-0a02472ebb77",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Nachricht für Heute",
+        "height": 1136,
+        "width": 2148,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -274,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "0fee5113-78e8-4f50-8b02-d71f3bd962db",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Nachricht für Morgen",
+        "height": 784,
+        "width": 1040,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        1360
+      ],
+      "typeVersion": 1,
+      "id": "ddb78ff7-aaed-459b-8e51-59bae5c9f96b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "={{ $json.nachricht }}\n-# *This message was sent automatically with n8n*",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        864,
+        512
+      ],
+      "id": "75709096-14eb-49a4-a3ea-a63c9ed5932b",
+      "name": "Discord3",
+      "webhookId": "cbe69b61-746f-478e-a01b-264e61b10c2c",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "NweVxqhxxGFrQazq",
+          "name": "Discord: Special Days🗓️"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f5ff73b8-ee65-4f0e-a35b-1d1bd5e85f18",
+              "leftValue": "={{ $now.month == 3 && $now.weekday == 6 && $now.plus({days: 7}).month == 4 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        992
+      ],
+      "id": "bd4373e5-0b2f-46e5-9abc-19ba95c9526f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f5ff73b8-ee65-4f0e-a35b-1d1bd5e85f18",
+              "leftValue": "={{ $now.plus({days: 1}).month == 3 && $now.plus({days: 1}).weekday == 6 && $now.plus({days: 8}).month == 4 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        1984
+      ],
+      "id": "21ad54dd-b05d-4021-832d-db20fd9ef312",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"specialdays\": [\n    {\"name\": \"Allerheiligen\", \"datum\": \"01.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍂 Heute ist **Allerheiligen**. Ein gesetzlicher Feiertag – also frei. Genieß den Herbst. 🍁\"},\n    {\"name\": \"April, April\", \"datum\": \"01.04.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🃏 Heute ist der **1. April**! Glaub heute lieber nicht alles, was du liest – außer dieser Nachricht hier. Viel Spaß beim Verschicken von Fake-News! 🐟\"},\n    {\"name\": \"Earth Day\", \"datum\": \"22.04.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌱 Heute ist **Earth Day**! Zeit, der Erde mal wieder danke zu sagen. Vielleicht heute mal das Fahrrad nehmen oder einen Baum umarmen? 🌎🌳\"},\n    {\"name\": \"Erster Weihnachtstag\", \"datum\": \"25.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎄 Heute ist der **1. Weihnachtstag** – Familienzeit, gutes Essen, Couch. Mehr braucht's nicht. Genieß es! 🍽️\"},\n    {\"name\": \"Europäischer Statistiktag\", \"datum\": \"20.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"📊 Heute ist **Europäischer Statistiktag**! 50% aller Menschen finden Statistik uninteressant – die anderen 50% auch 😄\"},\n    {\"name\": \"Evoli-Tag\", \"datum\": \"21.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🐾 Heute ist **Evoli-Tag**! Das Pokémon der unendlichen Möglichkeiten. Egal wie du dich heute entscheidest: Sei so anpassungsfähig wie Evoli! ✨\"},\n    {\"name\": \"Fibonacci-Tag\", \"datum\": \"23.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🔢 Heute ist **Fibonacci-Tag** – 1, 1, 2, 3! Die goldene Regel der Natur. Heute passt alles perfekt zusammen! 🌀\"},\n    {\"name\": \"Halloween\", \"datum\": \"31.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Süßes oder Saures? 🎃 Happy **Halloween**! Heute darf gruselig sein. Pass auf dich auf heute Nacht... oder auch nicht 👻\"},\n    {\"name\": \"Heiligabend\", \"datum\": \"24.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎁 Heute ist **Heiligabend**! Familie, Essen, Geschenke – das Beste am Dezember. Genieß den Abend, Alex! 🎄\"},\n    {\"name\": \"Heilige Drei Könige\", \"datum\": \"06.01.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Feiertag in Sicht! 👑 Traditionell ziehen heute Leute von Haus zu Haus – wir genießen einfach den freien Tag.\"},\n    {\"name\": \"Internationaler Frauentag\", \"datum\": \"08.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"♀️ Happy **Internationaler Frauentag**! Ein Tag für Gleichberechtigung und Power. Respekt an alle Frauen, die die Welt jeden Tag ein Stück besser machen! ✊💜\"},\n    {\"name\": \"Jahrestag der Befreiung vom Nationalsozialismus\", \"datum\": \"08.05.1945\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"🕊️ Heute jährt sich der **Tag der Befreiung vom Nationalsozialismus** – 8. Mai 1945. Nie vergessen.\"},\n    {\"name\": \"Namenstag\", \"datum\": \"26.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌟 Heute ist dein **Namenstag**! Alles Liebe dazu. Genieß deinen Ehrentag und lass dich ein bisschen feiern! ✨\"},\n    {\"name\": \"Neujahr\", \"datum\": \"01.01.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎉 **Frohes Neues Jahr!** Mögen alle deine n8n-Workflows heute ohne Fehler laufen 🚀\"},\n    {\"name\": \"Nikolaustag\", \"datum\": \"06.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🧦 Heute ist **Nikolaustag**! Ein Mann mit Bart bringt Süßigkeiten – klingt gut. Schuh rausgestellt? 👢\"},\n    {\"name\": \"Pawniversary\", \"datum\": \"10.03.2023\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"♟️ Happy **Pawniversary**! Another year playing chess, another year hanging queens left and right and another year trying to climb the rating ladder to finally not be garbage anymore. Since {{ $json.alter }} years you are on the grind! 👑\"},\n    {\"name\": \"Pi Day\", \"datum\": \"14.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Heute ist **π Day**! 3,14159265... du kennst den Rest. Zeit für ein Stück Kuchen (oder Pizza) 🥧⭕\"},\n    {\"name\": \"Pokémon Day\", \"datum\": \"27.02.1996\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"🔴⚪ Heute ist **Pokémon Day**! Am 27. Februar 1996 erschienen Rot & Grün in Japan. Seit {{ $json.alter }} Jahren heißt es nun schon: Schnapp sie dir alle! 👾⚡\"},\n    {\"name\": \"Reformationstag\", \"datum\": \"31.10.1517\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Heute ist arbeitsfrei! 📜 Ein historischer Wendepunkt der europäischen Geschichte – Luther würde sich über den Kostümwettbewerb wahrscheinlich wundern 😄\"},\n    {\"name\": \"Revenge of the Fifth\", \"datum\": \"05.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌑 **Revenge of the Fifth!** Heute gehört der dunklen Seite. ⚡\"},\n    {\"name\": \"Silvester\", \"datum\": \"31.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎆 Heute ist **Silvester**! Guten Rutsch! Lass die Korken knallen und komm gut ins neue Jahr 🥂\"},\n    {\"name\": \"Singles' Day\", \"datum\": \"11.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"✨ Heute ist **Singles' Day**! Ein Tag, um zu feiern, dass man auch mit sich selbst im Reinen sein kann. Die wichtigste Beziehung im Leben ist die zu dir selbst. Genieß die Zeit mit dir! 🥂\"},\n    {\"name\": \"St. Martin\", \"datum\": \"11.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🏮Heute ist **St. Martin**! Ein schöner Anlass für einen Abendspaziergang und ein bisschen Licht im Dunkeln.\"},\n    {\"name\": \"Star Wars Day\", \"datum\": \"04.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"⚔️ *May the Fourth be with you!* Heute ist **Star Wars Day**! Möge die Macht heute besonders stark in deinen Workflows sein! ✨\"},\n    {\"name\": \"System Administrator Appreciation Day\", \"datum\": \"31.07.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🖥️ Heute ist **Sysadmin Appreciation Day**! Zeit, danke zu sagen, dass das Internet zu Hause funktioniert 🙏\"},\n    {\"name\": \"Tag der Arbeit\", \"datum\": \"01.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🛠️ Heute ist **Tag der Arbeit**! Und das Beste daran: Die Arbeit ruht. Füße hoch und Akkus aufladen – du hast es dir verdient! 🍹\"},\n    {\"name\": \"Tag der Deutschen Einheit\", \"datum\": \"03.10.1990\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"Alles Gute zum Tag der Deutschen Einheit! Ein Feiertag für das Zusammenwachsen. Seit 1990 vereint 🕊️\"},\n    {\"name\": \"Tag des Grundgesetzes\", \"datum\": \"23.05.1949\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"📜 Heute ist der **Tag des Grundgesetzes**! Seit {{ $json.alter }} Jahren die Basis unserer Demokratie. Artikel 1: Die Würde des Menschen ist unantastbar ⚖️\"},\n    {\"name\": \"Valentinstag\", \"datum\": \"14.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"💝 Heute ist **Valentinstag**! Verteile heute ein bisschen extra Zuneigung ❤️\"},\n    {\"name\": \"Welt-Nutella-Tag\", \"datum\": \"05.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍫 Heute ist **Welt-Nutella-Tag**! Zeit, das Glas mit dem Löffel zu leeren. (Ganz ohne Brot!)\"},\n    {\"name\": \"Welt-Orgasmus-Tag\", \"datum\": \"21.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"😏 Heute ist **Welt-Orgasmus-Tag** für... nun ja, gute Laune. 🔥\"},\n    {\"name\": \"Weltkrebstag\", \"datum\": \"04.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎗️ Heute ist **Weltkrebstag**! Ein wichtiger Tag für Bewusstsein und Solidarität 🎗️\"},\n    {\"name\": \"Weltlehrertag\", \"datum\": \"05.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍎 Heute ist **Weltlehrertag**! Ein Danke an alle, die uns mehr beigebracht haben als nur Formeln – nämlich wie man die Welt versteht. 📚\"},\n    {\"name\": \"Weltschachtag\", \"datum\": \"20.07.1924\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"♟️ Heute ist der {{ $json.alter }}. **Weltschachtag**! Denkst du heute in Zügen? Der König grüßt. 👑\"},\n    {\"name\": \"Weltschokoladentag\", \"datum\": \"07.07.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍫 Heute ist **Weltschokoladentag**! Schokolade löst zwar keine Probleme, aber das tut ein Apfel ja auch nicht 🎉\"},\n    {\"name\": \"Welttag der Komplimente\", \"datum\": \"01.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌍 Heute ist **Welttag der Komplimente**! Ich muss mal sagen: Dein n8n-Setup ist echt beeindruckend. Mach weiter so! 🚀\"},\n    {\"name\": \"World Backup Day\", \"datum\": \"31.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"💾 Heute ist **World Backup Day**! Hast du schon dein letztes Backup gemacht? Wenn nicht – jetzt wäre ein guter Zeitpunkt. Denk dran: Once is none, twice is one. 🖥️✅\"},\n    {\"name\": \"Zweiter Weihnachtstag\", \"datum\": \"26.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎄 Heute ist der **2. Weihnachtstag** – Familienzeit, gutes Essen, Couch. Mehr braucht's nicht. Genieß es! 🍽️\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        608
+      ],
+      "id": "e52e9a62-b7d0-4aa6-a77b-91a94ee84b3a",
+      "name": "Special Days (statisch)"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"specialdays\": [\n    {\"name\": \"Allerheiligen\", \"datum\": \"01.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍂 Heute ist **Allerheiligen**. Ein gesetzlicher Feiertag – also frei. Genieß den Herbst. 🍁\"},\n    {\"name\": \"April, April\", \"datum\": \"01.04.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🃏 Heute ist der **1. April**! Glaub heute lieber nicht alles, was du liest – außer dieser Nachricht hier. Viel Spaß beim Verschicken von Fake-News! 🐟\"},\n    {\"name\": \"Earth Day\", \"datum\": \"22.04.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌱 Heute ist **Earth Day**! Zeit, der Erde mal wieder danke zu sagen. Vielleicht heute mal das Fahrrad nehmen oder einen Baum umarmen? 🌎🌳\"},\n    {\"name\": \"Erster Weihnachtstag\", \"datum\": \"25.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎄 Heute ist der **1. Weihnachtstag** – Familienzeit, gutes Essen, Couch. Mehr braucht's nicht. Genieß es! 🍽️\"},\n    {\"name\": \"Europäischer Statistiktag\", \"datum\": \"20.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"📊 Heute ist **Europäischer Statistiktag**! 50% aller Menschen finden Statistik uninteressant – die anderen 50% auch 😄\"},\n    {\"name\": \"Evoli-Tag\", \"datum\": \"21.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🐾 Heute ist **Evoli-Tag**! Das Pokémon der unendlichen Möglichkeiten. Egal wie du dich heute entscheidest: Sei so anpassungsfähig wie Evoli! ✨\"},\n    {\"name\": \"Fibonacci-Tag\", \"datum\": \"23.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🔢 Heute ist **Fibonacci-Tag** – 1, 1, 2, 3! Die goldene Regel der Natur. Heute passt alles perfekt zusammen! 🌀\"},\n    {\"name\": \"Halloween\", \"datum\": \"31.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Süßes oder Saures? 🎃 Happy **Halloween**! Heute darf gruselig sein. Pass auf dich auf heute Nacht... oder auch nicht 👻\"},\n    {\"name\": \"Heiligabend\", \"datum\": \"24.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎁 Heute ist **Heiligabend**! Familie, Essen, Geschenke – das Beste am Dezember. Genieß den Abend, Alex! 🎄\"},\n    {\"name\": \"Heilige Drei Könige\", \"datum\": \"06.01.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Feiertag in Sicht! 👑 Traditionell ziehen heute Leute von Haus zu Haus – wir genießen einfach den freien Tag.\"},\n    {\"name\": \"Internationaler Frauentag\", \"datum\": \"08.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"♀️ Happy **Internationaler Frauentag**! Ein Tag für Gleichberechtigung und Power. Respekt an alle Frauen, die die Welt jeden Tag ein Stück besser machen! ✊💜\"},\n    {\"name\": \"Jahrestag der Befreiung vom Nationalsozialismus\", \"datum\": \"08.05.1945\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"🕊️ Heute jährt sich der **Tag der Befreiung vom Nationalsozialismus** – 8. Mai 1945. Nie vergessen.\"},\n    {\"name\": \"Namenstag\", \"datum\": \"26.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌟 Heute ist dein **Namenstag**! Alles Liebe dazu. Genieß deinen Ehrentag und lass dich ein bisschen feiern! ✨\"},\n    {\"name\": \"Neujahr\", \"datum\": \"01.01.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎉 **Frohes Neues Jahr!** Mögen alle deine n8n-Workflows heute ohne Fehler laufen 🚀\"},\n    {\"name\": \"Nikolaustag\", \"datum\": \"06.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🧦 Heute ist **Nikolaustag**! Ein Mann mit Bart bringt Süßigkeiten – klingt gut. Schuh rausgestellt? 👢\"},\n    {\"name\": \"Pawniversary\", \"datum\": \"10.03.2023\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"♟️ Happy **Pawniversary**! Another year playing chess, another year hanging queens left and right and another year trying to climb the rating ladder to finally not be garbage anymore. Since {{ $json.alter }} years you are on the grind! 👑\"},\n    {\"name\": \"Pi Day\", \"datum\": \"14.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Heute ist **π Day**! 3,14159265... du kennst den Rest. Zeit für ein Stück Kuchen (oder Pizza) 🥧⭕\"},\n    {\"name\": \"Pokémon Day\", \"datum\": \"27.02.1996\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"🔴⚪ Heute ist **Pokémon Day**! Am 27. Februar 1996 erschienen Rot & Grün in Japan. Seit {{ $json.alter }} Jahren heißt es nun schon: Schnapp sie dir alle! 👾⚡\"},\n    {\"name\": \"Reformationstag\", \"datum\": \"31.10.1517\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"Heute ist arbeitsfrei! 📜 Ein historischer Wendepunkt der europäischen Geschichte – Luther würde sich über den Kostümwettbewerb wahrscheinlich wundern 😄\"},\n    {\"name\": \"Revenge of the Fifth\", \"datum\": \"05.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌑 **Revenge of the Fifth!** Heute gehört der dunklen Seite. ⚡\"},\n    {\"name\": \"Silvester\", \"datum\": \"31.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎆 Heute ist **Silvester**! Guten Rutsch! Lass die Korken knallen und komm gut ins neue Jahr 🥂\"},\n    {\"name\": \"Singles' Day\", \"datum\": \"11.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"✨ Heute ist **Singles' Day**! Ein Tag, um zu feiern, dass man auch mit sich selbst im Reinen sein kann. Die wichtigste Beziehung im Leben ist die zu dir selbst. Genieß die Zeit mit dir! 🥂\"},\n    {\"name\": \"St. Martin\", \"datum\": \"11.11.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🏮Heute ist **St. Martin**! Ein schöner Anlass für einen Abendspaziergang und ein bisschen Licht im Dunkeln.\"},\n    {\"name\": \"Star Wars Day\", \"datum\": \"04.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"⚔️ *May the Fourth be with you!* Heute ist **Star Wars Day**! Möge die Macht heute besonders stark in deinen Workflows sein! ✨\"},\n    {\"name\": \"System Administrator Appreciation Day\", \"datum\": \"31.07.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🖥️ Heute ist **Sysadmin Appreciation Day**! Zeit, danke zu sagen, dass das Internet zu Hause funktioniert 🙏\"},\n    {\"name\": \"Tag der Arbeit\", \"datum\": \"01.05.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🛠️ Heute ist **Tag der Arbeit**! Und das Beste daran: Die Arbeit ruht. Füße hoch und Akkus aufladen – du hast es dir verdient! 🍹\"},\n    {\"name\": \"Tag der Deutschen Einheit\", \"datum\": \"03.10.1990\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"Alles Gute zum Tag der Deutschen Einheit! Ein Feiertag für das Zusammenwachsen. Seit 1990 vereint 🕊️\"},\n    {\"name\": \"Tag des Grundgesetzes\", \"datum\": \"23.05.1949\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"📜 Heute ist der **Tag des Grundgesetzes**! Seit {{ $json.alter }} Jahren die Basis unserer Demokratie. Artikel 1: Die Würde des Menschen ist unantastbar ⚖️\"},\n    {\"name\": \"Valentinstag\", \"datum\": \"14.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"💝 Heute ist **Valentinstag**! Verteile heute ein bisschen extra Zuneigung ❤️\"},\n    {\"name\": \"Welt-Nutella-Tag\", \"datum\": \"05.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍫 Heute ist **Welt-Nutella-Tag**! Zeit, das Glas mit dem Löffel zu leeren. (Ganz ohne Brot!)\"},\n    {\"name\": \"Welt-Orgasmus-Tag\", \"datum\": \"21.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"😏 Heute ist **Welt-Orgasmus-Tag** für... nun ja, gute Laune. 🔥\"},\n    {\"name\": \"Weltkrebstag\", \"datum\": \"04.02.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎗️ Heute ist **Weltkrebstag**! Ein wichtiger Tag für Bewusstsein und Solidarität 🎗️\"},\n    {\"name\": \"Weltlehrertag\", \"datum\": \"05.10.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍎 Heute ist **Weltlehrertag**! Ein Danke an alle, die uns mehr beigebracht haben als nur Formeln – nämlich wie man die Welt versteht. 📚\"},\n    {\"name\": \"Weltschachtag\", \"datum\": \"20.07.1924\", \"altersberechnungnotwendig\": \"true\", \"nachricht\": \"♟️ Heute ist der {{ $json.alter }}. **Weltschachtag**! Denkst du heute in Zügen? Der König grüßt. 👑\"},\n    {\"name\": \"Weltschokoladentag\", \"datum\": \"07.07.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🍫 Heute ist **Weltschokoladentag**! Schokolade löst zwar keine Probleme, aber das tut ein Apfel ja auch nicht 🎉\"},\n    {\"name\": \"Welttag der Komplimente\", \"datum\": \"01.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🌍 Heute ist **Welttag der Komplimente**! Ich muss mal sagen: Dein n8n-Setup ist echt beeindruckend. Mach weiter so! 🚀\"},\n    {\"name\": \"World Backup Day\", \"datum\": \"31.03.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"💾 Heute ist **World Backup Day**! Hast du schon dein letztes Backup gemacht? Wenn nicht – jetzt wäre ein guter Zeitpunkt. Denk dran: Once is none, twice is one. 🖥️✅\"},\n    {\"name\": \"Zweiter Weihnachtstag\", \"datum\": \"26.12.0000\", \"altersberechnungnotwendig\": \"false\", \"nachricht\": \"🎄 Heute ist der **2. Weihnachtstag** – Familienzeit, gutes Essen, Couch. Mehr braucht's nicht. Genieß es! 🍽️\"}\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        1600
+      ],
+      "id": "9f3dc601-b006-4fe8-b5a7-4553bd62e882",
+      "name": "Special Days (statisch)1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "🪲 Discord: Fehler melden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter für Morgen": {
+      "main": [
+        [
+          {
+            "node": "Discord2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AltersberechnungNotwendig-Switch": {
+      "main": [
+        [
+          {
+            "node": "Discord3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Altersberechnung für Heute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Altersberechnung für Heute": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Jahrestag der Befreiung vom Nationalsozialismus",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pawniversary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pokémon Day",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tag der Deutschen Einheit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tag des Grundgesetzes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Weltschachtag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag des Grundgesetzes": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Tag der Deutschen Einheit": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Jahrestag der Befreiung vom Nationalsozialismus": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weltschachtag": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Merge: All": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pokémon Day": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Special Days (variabel)": {
+      "main": [
+        [
+          {
+            "node": "Array: Special Days (variabel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pawniversary": {
+      "main": [
+        [
+          {
+            "node": "Merge: All",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "⏱️ Um 6:00 Uhr": {
+      "main": [
+        [
+          {
+            "node": "Special Days (statisch)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Special Days (variabel)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⏱️ Um 18:00 Uhr": {
+      "main": [
+        [
+          {
+            "node": "Special Days (statisch)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Special Days (variabel)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filter3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Special Days (variabel)1": {
+      "main": [
+        [
+          {
+            "node": "Split Out4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out4": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Array: Special Days (variabel)": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Array: Special Days (statisch)1": {
+      "main": [
+        [
+          {
+            "node": "Filter für Heute1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Discord: Special Days (variabel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Discord1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Discord: 🏳️‍🌈 Happy Pride Month! 🏳️‍🌈",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter3": {
+      "main": [
+        [
+          {
+            "node": "Discord: 🏳️‍🌈 Happy Pride Month! 🏳️‍🌈1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out3": {
+      "main": [
+        [
+          {
+            "node": "Filter für Morgen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter für Heute1": {
+      "main": [
+        [
+          {
+            "node": "AltersberechnungNotwendig-Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Discord: Special Days (variabel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Discord1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Special Days (statisch)": {
+      "main": [
+        [
+          {
+            "node": "Array: Special Days (statisch)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Special Days (statisch)1": {
+      "main": [
+        [
+          {
+            "node": "Split Out3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/Berlin",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "bbcb4be2-e7df-42b1-8fe9-f42b7577aa56",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "18da6dd9697b1fb7fa9684e5578840545014998b708b2c7ada1ec4873bb2dda8"
+  },
+  "id": "0YdLqlgq8FHRTddM",
+  "tags": []
+}
