@@ -855,14 +855,14 @@
     {
       "parameters": {
         "content": "# Nachricht für Heute",
-        "height": 1136,
+        "height": 944,
         "width": 2148,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -274,
-        16
+        208
       ],
       "typeVersion": 1,
       "id": "0fee5113-78e8-4f50-8b02-d71f3bd962db",
@@ -1390,7 +1390,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "d48980f8-9776-4fea-9400-916d57a6d67e",
+  "versionId": "036e0aa3-b6e0-4b6f-97a4-24136bf23084",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "18da6dd9697b1fb7fa9684e5578840545014998b708b2c7ada1ec4873bb2dda8"
