@@ -4,7 +4,7 @@ A collection of specialized n8n workflows for automated news aggregation, securi
 
 ---
 
-## 🛡️ Featured: Cyber-Watch
+## 🛡️ Featured: Cyber-Watch ⚠️
 The **Cyber-Watch** workflow is a robust news aggregator designed to keep you updated on the latest in Cybersecurity, Hardware, and Tech-News.
 
 ### 🛠️ How it works
